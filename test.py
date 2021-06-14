@@ -9,44 +9,43 @@ dict_ = {}
 filelimit = 1
 
 
+    
 
-for i in range(1, filelimit + 1):
-
-    filename = "a.jpg"
-          
-    text = str(((pytesseract.image_to_string(Image.open(filename)))))
-    text = text.replace('-\n', '')
-
-
-def test(name,counter):
+def test():
     tmp = []
-    try:
-        if name in text.split()[counter].lower():
-            tmp = []
-            beta_counter = counter+1
-            while ":" not in text.split()[beta_counter].lower():
-                tmp.append(text.split()[beta_counter])
-                beta_counter += 1
-            dict_[name] = tmp
-    except IndexError:
-        pass
+    counter = 0
+    beta_counter = 0
+    while counter < len(text.splitlines()):
+        if ":" in text.splitlines()[counter]:
+            key = text.splitlines()[counter]
+            beta_counter = counter
+            try:
+                while ":" not in text.splitlines()[beta_counter+1]:
+                    tmp.append(text.splitlines()[beta_counter+1])
+                    beta_counter+=1
+                dict_[key.lower().strip(":")] = tmp
+                tmp = []
+            except IndexError:
+                print(dict_)
+            # beta_counter = 0
+        counter += 1
+    
 
+def final(text):
+    test()
 
-outfile = ''
+   
 
-counter = 0
+    outfile = f"{os.environ['HOME']}/Desktop/Docs/{'_'.join(dict_['names']).lower()}"
+    # os.system(f"touch {outfile}")
+    with open(outfile+".txt", "w+") as f:
+        f.write(text)
+    
 
-while counter <= len(text.split()):
-    test('names',counter)
-    test('surname',counter)
-    test('sex',counter)
-    test("number",counter)
-    test("birth",counter)
-    counter += 1
-
-print(dict_)  
-
-outfile = f"{os.environ['HOME']}/Desktop/Docs/{'_'.join(dict_['names']).lower()}"
-with open(outfile+".txt", "w+") as f:
-
-    f.write(text)
+for dir, folder, files in os.walk("pictures"):
+    for i in files:
+        filename =  "pictures/"+ i
+        text = str(((pytesseract.image_to_string(Image.open(filename)))))
+        text = text.replace('-\n', '')
+        final(text)
+        os.system(f"rm -rf {filename}")
