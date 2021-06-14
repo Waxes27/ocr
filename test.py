@@ -48,4 +48,9 @@ for dir, folder, files in os.walk("pictures"):
         text = str(((pytesseract.image_to_string(Image.open(filename)))))
         text = text.replace('-\n', '')
         final(text)
-        os.system(f"rm -rf {filename}")
+        if len(dict_) == 8:
+            os.system(f"rm -rf {filename}")
+        else:
+            print("not done")
+            os.system(f"mv {filename} redo")
+
