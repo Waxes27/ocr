@@ -8,7 +8,7 @@ dict_ = {}
 
 filelimit = 1
 
-
+id_book_keys = ["i.d.","surname","forenames","country of birth","date of birth","date issued",]
     
 
 def test():
@@ -29,14 +29,35 @@ def test():
                 print(dict_)
             # beta_counter = 0
         counter += 1
+
+
     
 
 def final(text):
-    test()
+    if 'I.D.' in text or "HOME" in text:
+        # print(text.splitlines())
+        counter = 0
+        while counter < len(text.splitlines()):
+            for i in id_book_keys:
+                if i in text.splitlines()[counter].lower():
+                    beta_counter = counter
+                    try:
+                        while text.splitlines()[beta_counter].lower() not in id_book_keys:
+                            print(text.splitlines()[beta_counter])
+                            beta_counter += 1
+                    except IndexError:
+                        pass
+
+            counter += 1
+
+        # print("ID BOOK")
+    else:
+        test()
+    # exit()
 
    
 
-    outfile = f"{os.environ['HOME']}/Desktop/Docs/{'_'.join(dict_['names']).lower()}"
+    outfile = f"{os.environ['HOME']}/Desktop/OCR/{'_'.join(dict_['names']).lower()}"
     # os.system(f"touch {outfile}")
     with open(outfile+".txt", "w+") as f:
         f.write(text)
@@ -45,6 +66,7 @@ def final(text):
 for dir, folder, files in os.walk("pictures"):
     for i in files:
         filename =  "pictures/"+ i
+        print(Image.open(filename))
         text = str(((pytesseract.image_to_string(Image.open(filename)))))
         text = text.replace('-\n', '')
         final(text)
@@ -52,5 +74,5 @@ for dir, folder, files in os.walk("pictures"):
             os.system(f"rm -rf {filename}")
         else:
             print("not done")
-            os.system(f"mv {filename} {os.environ['HOME']}/Desktop/Docs/redo")
+            os.system(f"mv {filename} {os.environ['HOME']}/Desktop/OCR/redo")
 
