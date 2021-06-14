@@ -52,5 +52,5 @@ for dir, folder, files in os.walk("pictures"):
             os.system(f"rm -rf {filename}")
         else:
             print("not done")
-            os.system(f"mv {filename} redo")
+            os.system(f"mv {filename} {os.environ['HOME']}/Desktop/Docs/redo")
 
