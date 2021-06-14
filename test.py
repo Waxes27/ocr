@@ -33,7 +33,7 @@ def test():
 
     
 
-def final(text):
+def final(text,filename):
     if 'I.D.' in text or "HOME" in text:
         # print(text.splitlines())
         counter = 0
@@ -56,8 +56,12 @@ def final(text):
     # exit()
 
    
+    try:
+        outfile = f"{os.environ['HOME']}/Desktop/OCR/{'_'.join(dict_['names']).lower()}"
+    except KeyError:
+        outfile = ""
+        os.system(f"mv {filename} {os.environ['HOME']}/Desktop/OCR/redo")
 
-    outfile = f"{os.environ['HOME']}/Desktop/OCR/{'_'.join(dict_['names']).lower()}"
     # os.system(f"touch {outfile}")
     with open(outfile+".txt", "w+") as f:
         f.write(text)
@@ -66,11 +70,11 @@ def final(text):
 for dir, folder, files in os.walk("pictures"):
     for i in files:
         filename =  "pictures/"+ i
-        print(Image.open(filename))
+
         text = str(((pytesseract.image_to_string(Image.open(filename)))))
         text = text.replace('-\n', '')
-        final(text)
-        if len(dict_) == 8:
+        final(text,filename)
+        if len(dict_) >= 8:
             os.system(f"rm -rf {filename}")
         else:
             print("not done")
